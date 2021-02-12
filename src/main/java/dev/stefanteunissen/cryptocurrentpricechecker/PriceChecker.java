@@ -1,24 +1,28 @@
 package dev.stefanteunissen.cryptocurrentpricechecker;
 
+import dev.stefanteunissen.cryptocurrentpricechecker.providers.BitvavoProvider;
+import dev.stefanteunissen.cryptocurrentpricechecker.providers.CoinbaseProvider;
+import dev.stefanteunissen.cryptocurrentpricechecker.providers.Provider;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Collection;
+import java.util.Collections;
 
 public class PriceChecker {
-    private final OkHttpClient client;
     private final ArrayList<Position> positions;
+    private final ArrayList<Provider> providers;
+    private final ArrayList<Provider> possibleProviders;
     private BigDecimal totalWorth;
 
     public PriceChecker() {
-        this.client = new OkHttpClient();
         this.positions = new ArrayList<>();
+        this.possibleProviders = new ArrayList<>();
+        this.possibleProviders.add(new BitvavoProvider());
+        this.possibleProviders.add(new CoinbaseProvider());
+        this.providers = new ArrayList<>();
     }
 
     public void readFile() throws IOException {
@@ -34,60 +38,39 @@ public class PriceChecker {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] splitLine = line.split(":");
-                String provider = splitLine[0];
+                String provider = splitLine[0].toLowerCase();
                 String market = splitLine[1];
                 BigDecimal owned = new BigDecimal(splitLine[2]);
-                positions.add(new Position(provider, market, owned));
+                this.positions.add(new Position(provider, market, owned));
+                for (Provider possibleProvider : this.possibleProviders) {
+                    if (possibleProvider.getName().equals(provider) && !this.providers.contains(possibleProvider))
+                        this.providers.add(possibleProvider);
+                }
             }
+            this.positions.sort(new PositionNameComparator());
         }
     }
 
     public void getPrices() {
-        try {
-            String returnString = this.checkPrice();
-            JSONArray obj = new JSONArray(returnString);
-            for (int i = 0; i < obj.length(); i++) {
-                JSONObject jObject = obj.getJSONObject(i);
-                for (Position position : positions) {
-                    if (position.getMarket().equals(jObject.getString("market"))) {
-                        BigDecimal price = BigDecimal.valueOf(jObject.getDouble("price"));
-                        position.setPrice(price);
-                        break;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        this.totalWorth = new BigDecimal(0);
+        for (Provider provider : this.providers) {
+            provider.getPrices(this.positions);
         }
     }
 
-    public void calculateWorth() {
-        this.totalWorth = new BigDecimal(0);
-        for (Position pos : positions) {
-            BigDecimal worth = pos.getOwned().multiply(pos.getPrice());
-            pos.setWorth(worth);
-            this.totalWorth = totalWorth.add(worth);
+    public void calculateWorths() {
+        for (Provider provider : this.providers) {
+            totalWorth = totalWorth.add(provider.calculateWorth(this.positions));
         }
     }
 
     public void print() {
+        for (Provider provider : this.providers) {
+            provider.printProvider(this.positions);
+        }
         String lineFormat = "%-10s%-20s%-20s%s%n";
-        System.out.printf(lineFormat, "Market", "Price", "Owned", "Value");
-        for (Position pos : positions) {
-            System.out.printf(lineFormat, pos.getMarket(), pos.getPrice(), pos.getOwned(), pos.getWorth());
-        }
         System.out.printf(lineFormat, "", "", "", "_____________");
-        System.out.printf(lineFormat, "bitvavo", "", "", this.totalWorth);
-    }
-
-    public String checkPrice() throws IOException {
-        Request request = new Request.Builder()
-                .url("https://api.bitvavo.com/v2/ticker/price")
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            return Objects.requireNonNull(response.body()).string();
-        }
+        System.out.printf(lineFormat, "", "", "Total worth:", this.totalWorth);
     }
 
     private String configLocation() {

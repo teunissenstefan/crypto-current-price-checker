@@ -12,14 +12,15 @@ public class App {
         t.schedule(new TimerTask() {
             @Override
             public void run() {
-                clearConsole();
                 try {
                     priceChecker.readFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 priceChecker.getPrices();
-                priceChecker.calculateWorth();
+                priceChecker.calculateWorths();
+                clearConsole();
                 priceChecker.print();
             }
         }, 0, 30000);

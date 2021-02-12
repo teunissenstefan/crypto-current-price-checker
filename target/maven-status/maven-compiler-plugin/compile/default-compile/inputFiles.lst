@@ -1,3 +1,7 @@
-/home/teunissenstefan/IdeaProjects/CurrentCryptoPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/Position.java
-/home/teunissenstefan/IdeaProjects/CurrentCryptoPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/PriceChecker.java
-/home/teunissenstefan/IdeaProjects/CurrentCryptoPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/App.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/PositionNameComparator.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/Position.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/PriceChecker.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/providers/CoinbaseProvider.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/providers/Provider.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/App.java
+/home/teunissenstefan/IdeaProjects/CryptoCurrentPriceChecker/src/main/java/dev/stefanteunissen/cryptocurrentpricechecker/providers/BitvavoProvider.java
