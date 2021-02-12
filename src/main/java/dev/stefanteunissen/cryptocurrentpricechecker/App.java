@@ -1,10 +1,16 @@
 package dev.stefanteunissen.cryptocurrentpricechecker;
 
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class App {
+    public static final int DELAY = 0;
+    public static final int PERIOD = 30000;
+    public static final int ROUNDING_SCALE = 8;
+    public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_EVEN;
+
     public static void main(String[] args) {
         PriceChecker priceChecker = new PriceChecker();
 
@@ -23,7 +29,7 @@ public class App {
                 clearConsole();
                 priceChecker.print();
             }
-        }, 0, 30000);
+        }, DELAY, PERIOD);
     }
 
     public static void clearConsole() {

@@ -8,11 +8,14 @@ public class Position {
     private BigDecimal price;
     private BigDecimal owned;
     private BigDecimal worth;
+    private BigDecimal input;
+    private BigDecimal change;
 
-    public Position(String provider, String market, BigDecimal owned) {
+    public Position(String provider, String market, BigDecimal owned, BigDecimal input) {
         this.provider = provider;
         this.market = market;
         this.owned = owned;
+        this.input = input;
     }
 
     public String getMarket() {
@@ -53,5 +56,21 @@ public class Position {
 
     public void setProvider(String provider) {
         this.provider = provider;
+    }
+
+    public BigDecimal getInput() {
+        return input;
+    }
+
+    public void setInput(BigDecimal input) {
+        this.input = input;
+    }
+
+    public BigDecimal getChange() {
+        return change;
+    }
+
+    public void setChange(BigDecimal change) {
+        this.change = change;
     }
 }
