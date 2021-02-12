@@ -10,6 +10,7 @@ public class Position {
     private BigDecimal worth;
     private BigDecimal input;
     private BigDecimal change;
+    private boolean isHighlighted = false;
 
     public Position(String provider, String market, BigDecimal owned, BigDecimal input) {
         this.provider = provider;
@@ -72,5 +73,13 @@ public class Position {
 
     public void setChange(BigDecimal change) {
         this.change = change;
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        isHighlighted = highlighted;
     }
 }

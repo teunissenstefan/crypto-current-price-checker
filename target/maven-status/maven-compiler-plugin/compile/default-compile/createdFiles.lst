@@ -4,5 +4,6 @@ dev/stefanteunissen/cryptocurrentpricechecker/Position.class
 dev/stefanteunissen/cryptocurrentpricechecker/providers/BitvavoProvider.class
 dev/stefanteunissen/cryptocurrentpricechecker/providers/CoinbaseProvider.class
 dev/stefanteunissen/cryptocurrentpricechecker/providers/Provider.class
+dev/stefanteunissen/cryptocurrentpricechecker/Colors.class
 dev/stefanteunissen/cryptocurrentpricechecker/App.class
 dev/stefanteunissen/cryptocurrentpricechecker/PositionNameComparator.class

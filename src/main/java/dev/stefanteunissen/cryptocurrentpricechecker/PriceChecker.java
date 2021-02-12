@@ -35,22 +35,39 @@ public class PriceChecker {
             writer.println("#provider:market:owned:input");
             writer.println("BITVAVO:BTC-EUR:0.0:0.0");
             writer.println("BITVAVO:ETH-EUR:0.0:0.0");
+            writer.println("--highlighted--");
+            writer.println("BITVAVO:BTC-EUR");
             writer.close();
         }
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
+            boolean atHighlighted = false;
             while ((line = br.readLine()) != null) {
+                if(line.startsWith("--highlighted--")){
+                    atHighlighted = true;
+                    continue;
+                }
                 if(line.startsWith("#"))
                     continue;
-                String[] splitLine = line.split(":");
-                String provider = splitLine[0].toLowerCase();
-                String market = splitLine[1];
-                BigDecimal owned = new BigDecimal(splitLine[2]);
-                BigDecimal input = new BigDecimal(splitLine[3]);
-                this.positions.add(new Position(provider, market, owned, input));
-                for (Provider possibleProvider : this.possibleProviders) {
-                    if (possibleProvider.getName().equals(provider) && !this.providers.contains(possibleProvider))
-                        this.providers.add(possibleProvider);
+                if(!atHighlighted){
+                    String[] splitLine = line.split(":");
+                    String provider = splitLine[0].toLowerCase();
+                    String market = splitLine[1];
+                    BigDecimal owned = new BigDecimal(splitLine[2]);
+                    BigDecimal input = new BigDecimal(splitLine[3]);
+                    this.positions.add(new Position(provider, market, owned, input));
+                    for (Provider possibleProvider : this.possibleProviders) {
+                        if (possibleProvider.getName().equals(provider) && !this.providers.contains(possibleProvider))
+                            this.providers.add(possibleProvider);
+                    }
+                }else{
+                    String[] splitLine = line.split(":");
+                    String provider = splitLine[0].toLowerCase();
+                    String market = splitLine[1];
+                    for (Position position : this.positions) {
+                        if (position.getProvider().equals(provider) && position.getMarket().equals(market))
+                            position.setHighlighted(true);
+                    }
                 }
             }
             this.positions.sort(new PositionNameComparator());

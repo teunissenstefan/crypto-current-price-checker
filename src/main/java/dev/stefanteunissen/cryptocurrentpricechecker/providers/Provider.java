@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import static dev.stefanteunissen.cryptocurrentpricechecker.App.ROUNDING_MODE;
 import static dev.stefanteunissen.cryptocurrentpricechecker.App.ROUNDING_SCALE;
+import static dev.stefanteunissen.cryptocurrentpricechecker.Colors.*;
 
 public abstract class Provider {
     String name;
@@ -33,7 +34,7 @@ public abstract class Provider {
         for (Position pos : positions) {
             if (pos.getProvider().equals(this.name))
                 System.out.printf(
-                        lineFormat,
+                        (pos.isHighlighted() ? ANSI_RED_BACKGROUND : "")+lineFormat+(pos.isHighlighted() ? ANSI_RESET : ""),
                         pos.getMarket(),
                         pos.getPrice().setScale(ROUNDING_SCALE, ROUNDING_MODE),
                         pos.getOwned().setScale(ROUNDING_SCALE, ROUNDING_MODE),
