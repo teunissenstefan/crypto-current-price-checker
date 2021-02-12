@@ -32,7 +32,7 @@ public class PriceChecker {
         File f = new File(this.configLocation());
         if (!f.exists()) {
             PrintWriter writer = new PrintWriter(this.configLocation());
-            writer.println("#prodiver:market:owned:input");
+            writer.println("#provider:market:owned:input");
             writer.println("BITVAVO:BTC-EUR:0.0:0.0");
             writer.println("BITVAVO:ETH-EUR:0.0:0.0");
             writer.close();
