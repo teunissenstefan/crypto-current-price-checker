@@ -97,9 +97,9 @@ public class PriceChecker {
         }
         String lineFormat = "%-10s%-20s%-20s%-20s%-20s%s%n";
         System.out.printf(lineFormat, "", "", "", "", "", "_____________");
-        System.out.printf(lineFormat, "", "", "", "", "Total input:", this.totalInput.setScale(ROUNDING_SCALE, ROUNDING_MODE));
-        System.out.printf(lineFormat, "", "", "", "", "Total worth:", this.totalWorth.setScale(ROUNDING_SCALE, ROUNDING_MODE));
-        System.out.printf(lineFormat, "", "", "", "", "Total change:", this.totalChange.setScale(ROUNDING_SCALE, ROUNDING_MODE));
+        System.out.printf(lineFormat, "", "", "", "", "Total input:", printBigDecimal(this.totalInput));
+        System.out.printf(lineFormat, "", "", "", "", "Total worth:", printBigDecimal(this.totalWorth));
+        System.out.printf(lineFormat, "", "", "", "", "Total change:", printBigDecimal(this.totalChange));
     }
 
     private String configLocation() {
@@ -107,5 +107,10 @@ public class PriceChecker {
         if (System.getProperty("os.name").contains("Windows"))
             return dir + "My Documents";
         return dir + ".config" + File.separatorChar + "cryptocurrentpricechecker.conf";
+    }
+
+    public static String printBigDecimal(BigDecimal bigDecimal){
+        String returnString = bigDecimal.setScale(ROUNDING_SCALE, ROUNDING_MODE).toString();
+        return returnString.startsWith("0E") ? "0" : returnString;
     }
 }

@@ -20,14 +20,13 @@ public class App {
             public void run() {
                 try {
                     priceChecker.readFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    priceChecker.getPrices();
+                    priceChecker.calculateWorths();
+                    clearConsole();
+                    priceChecker.print();
+                } catch (Exception e) {
+                    System.out.println("Exception: "+e);
                 }
-
-                priceChecker.getPrices();
-                priceChecker.calculateWorths();
-                clearConsole();
-                priceChecker.print();
             }
         }, DELAY, PERIOD);
     }

@@ -1,6 +1,7 @@
 package dev.stefanteunissen.cryptocurrentpricechecker.providers;
 
 import dev.stefanteunissen.cryptocurrentpricechecker.Position;
+import dev.stefanteunissen.cryptocurrentpricechecker.PriceChecker;
 import okhttp3.OkHttpClient;
 
 import java.math.BigDecimal;
@@ -36,15 +37,15 @@ public abstract class Provider {
                 System.out.printf(
                         (pos.isHighlighted() ? ANSI_RED_BACKGROUND : "")+lineFormat+(pos.isHighlighted() ? ANSI_RESET : ""),
                         pos.getMarket(),
-                        pos.getPrice().setScale(ROUNDING_SCALE, ROUNDING_MODE),
-                        pos.getOwned().setScale(ROUNDING_SCALE, ROUNDING_MODE),
-                        pos.getInput().setScale(ROUNDING_SCALE, ROUNDING_MODE),
-                        pos.getWorth().setScale(ROUNDING_SCALE, ROUNDING_MODE),
-                        pos.getChange().setScale(ROUNDING_SCALE, ROUNDING_MODE)
+                        PriceChecker.printBigDecimal(pos.getPrice()),
+                        PriceChecker.printBigDecimal(pos.getOwned()),
+                        PriceChecker.printBigDecimal(pos.getInput()),
+                        PriceChecker.printBigDecimal(pos.getWorth()),
+                        PriceChecker.printBigDecimal(pos.getChange())
                 );
         }
         System.out.printf(lineFormat, "", "", "", "", "", "_____________");
-        System.out.printf(lineFormat, this.name, "", "", "", "", this.getTotalWorth().setScale(ROUNDING_SCALE, ROUNDING_MODE));
+        System.out.printf(lineFormat, this.name, "", "", "", "", PriceChecker.printBigDecimal(this.getTotalWorth()));
         System.out.println();
     }
 
