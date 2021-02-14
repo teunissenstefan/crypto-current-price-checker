@@ -45,7 +45,7 @@ public abstract class Provider {
                 );
         }
         System.out.printf(lineFormat, "", "", "", "", "", "_____________");
-        System.out.printf(lineFormat, this.name, "", "", "", "", PriceChecker.printBigDecimal(this.getTotalWorth()));
+        System.out.printf(lineFormat, this.name, "", "", PriceChecker.printBigDecimal(this.getTotalInput()), PriceChecker.printBigDecimal(this.getTotalWorth()), PriceChecker.printBigDecimal(this.getTotalChange()));
         System.out.println();
     }
 
