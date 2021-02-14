@@ -1,6 +1,5 @@
 package dev.stefanteunissen.cryptocurrentpricechecker;
 
-import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.Timer;
 import java.util.TimerTask;

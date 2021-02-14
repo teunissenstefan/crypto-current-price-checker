@@ -16,8 +16,10 @@ public class PriceChecker {
     private final ArrayList<Provider> providers;
     private final ArrayList<Provider> possibleProviders;
     private BigDecimal totalInput;
-    private BigDecimal totalWorth;
-    private BigDecimal totalChange;
+    private BigDecimal totalWorth = new BigDecimal(0);
+    private BigDecimal totalChange = new BigDecimal(0);
+    private BigDecimal oldTotalWorth;
+    private BigDecimal oldTotalChange;
 
     public PriceChecker() {
         this.positions = new ArrayList<>();
@@ -43,13 +45,13 @@ public class PriceChecker {
             String line;
             boolean atHighlighted = false;
             while ((line = br.readLine()) != null) {
-                if(line.startsWith("--highlighted--")){
+                if (line.startsWith("--highlighted--")) {
                     atHighlighted = true;
                     continue;
                 }
-                if(line.startsWith("#"))
+                if (line.startsWith("#"))
                     continue;
-                if(!atHighlighted){
+                if (!atHighlighted) {
                     String[] splitLine = line.split(":");
                     String provider = splitLine[0].toLowerCase();
                     String market = splitLine[1];
@@ -60,7 +62,7 @@ public class PriceChecker {
                         if (possibleProvider.getName().equals(provider) && !this.providers.contains(possibleProvider))
                             this.providers.add(possibleProvider);
                     }
-                }else{
+                } else {
                     String[] splitLine = line.split(":");
                     String provider = splitLine[0].toLowerCase();
                     String market = splitLine[1];
@@ -75,15 +77,17 @@ public class PriceChecker {
     }
 
     public void getPrices() {
-        this.totalInput = new BigDecimal(0);
-        this.totalWorth = new BigDecimal(0);
-        this.totalChange = new BigDecimal(0);
         for (Provider provider : this.providers) {
             provider.getPrices(this.positions);
         }
     }
 
     public void calculateWorths() {
+        this.oldTotalWorth = this.totalWorth.compareTo(BigDecimal.ZERO) == 0 ? new BigDecimal(String.valueOf(this.totalWorth)) : this.totalWorth;
+        this.oldTotalChange = this.totalChange.compareTo(BigDecimal.ZERO) == 0 ? new BigDecimal(String.valueOf(this.totalChange)) : this.totalChange;
+        this.totalInput = new BigDecimal(0);
+        this.totalWorth = new BigDecimal(0);
+        this.totalChange = new BigDecimal(0);
         for (Provider provider : this.providers) {
             totalWorth = totalWorth.add(provider.calculateWorth(this.positions)).setScale(ROUNDING_SCALE, ROUNDING_MODE);
             totalInput = totalInput.add(provider.getTotalInput()).setScale(ROUNDING_SCALE, ROUNDING_MODE);
@@ -98,8 +102,8 @@ public class PriceChecker {
         String lineFormat = "%-10s%-20s%-20s%-20s%-20s%s%n";
         System.out.printf(lineFormat, "", "", "", "", "", "_____________");
         System.out.printf(lineFormat, "", "", "", "", "Total input:", printBigDecimal(this.totalInput));
-        System.out.printf(lineFormat, "", "", "", "", "Total worth:", printBigDecimal(this.totalWorth));
-        System.out.printf(lineFormat, "", "", "", "", "Total change:", printBigDecimal(this.totalChange));
+        System.out.printf(lineFormat, "", "", "", "", "Total worth:", printBigDecimalWithPositiveOrNegativeColor(this.oldTotalWorth, this.totalWorth));
+        System.out.printf(lineFormat, "", "", "", "", "Total change:", printBigDecimalWithPositiveOrNegativeColor(this.oldTotalChange, this.totalChange));
     }
 
     private String configLocation() {
@@ -109,7 +113,15 @@ public class PriceChecker {
         return dir + ".config" + File.separatorChar + "cryptocurrentpricechecker.conf";
     }
 
-    public static String printBigDecimal(BigDecimal bigDecimal){
+    public static String printBigDecimalWithPositiveOrNegativeColor(BigDecimal oldBigDecimal, BigDecimal newBigDecimal) {
+        if(newBigDecimal.compareTo(oldBigDecimal) > 0)
+            return Colors.ANSI_GREEN_BACKGROUND+PriceChecker.printBigDecimal(newBigDecimal)+Colors.ANSI_RESET;
+        if(newBigDecimal.compareTo(oldBigDecimal) < 0)
+            return Colors.ANSI_RED_BACKGROUND+PriceChecker.printBigDecimal(newBigDecimal)+Colors.ANSI_RESET;
+        return PriceChecker.printBigDecimal(newBigDecimal);
+    }
+
+    public static String printBigDecimal(BigDecimal bigDecimal) {
         String returnString = bigDecimal.setScale(ROUNDING_SCALE, ROUNDING_MODE).toString();
         return returnString.startsWith("0E") ? "0" : returnString;
     }
