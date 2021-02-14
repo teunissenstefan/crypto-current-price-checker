@@ -1,4 +1,6 @@
-#CryptoCurrentPriceChecker
+# CryptoCurrentPriceChecker
+
+![Crypto Current Price Checker image](https://raw.githubusercontent.com/teunissenstefan/crypto-current-price-checker/master/screenshots/main.png "Crypto Current Price Checker")
 
 Build:
 `mvn clean compile assembly:single`
